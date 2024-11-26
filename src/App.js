@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import ZohoAuth from "./components/ZohoAuth"; // Import ZohoAuth component
+import Dashboard from "./Dashboard"; // Import Dashboard component
 
-function App() {
+const App = () => {
+  const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    // Check for the access token in localStorage
+    const token = localStorage.getItem("zoho_access_token");
+    setAccessToken(token);
+  }, []);
+  console.log("info");
+  console.log(accessToken);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        {accessToken ? (
+          <div>
+            {/* Main Content */}
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+            </Routes>
+          </div>
+        ) : (
+          <ZohoAuth /> // Show ZohoAuth component for login
+        )}
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
